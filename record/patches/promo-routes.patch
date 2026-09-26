@@ -1,0 +1,77 @@
+diff -ru a/Meraline/App/AppDelegate.swift b/Meraline/App/AppDelegate.swift
+--- a/Meraline/App/AppDelegate.swift	2026-09-26 18:59:53
++++ b/Meraline/App/AppDelegate.swift	2026-09-26 19:00:03
+@@ -78,6 +78,15 @@
+                 if let selection = selection.flatMap({ SelectedText($0) }) { session.bring(selection) }
+                 if let text { session.draft = text }
+                 if send { session.send() }
++            case .offer(let selection, let app):
++                // Promo build only: what the shortcut does after reading a selection in another app.
++                Log.app.info("URL route: offer a selection")
++                let appURL = app.flatMap { name in
++                    ["/System/Applications", "/Applications"].map { URL(fileURLWithPath: "\($0)/\(name).app") }
++                        .first { FileManager.default.fileExists(atPath: $0.path) }
++                }
++                session.bringCurrentSelection(text: SelectedText(selection, appName: app, appURL: appURL), files: [])
++                panel.show()
+             case .newChat:
+                 Log.app.info("URL route: new chat")
+                 session.reset()
+diff -ru a/Meraline/App/AutomationRoute.swift b/Meraline/App/AutomationRoute.swift
+--- a/Meraline/App/AutomationRoute.swift	2026-09-26 18:59:53
++++ b/Meraline/App/AutomationRoute.swift	2026-09-26 19:00:03
+@@ -8,12 +8,15 @@
+ ///     meraline://ask?selection=…        open the window with text to ask about, as if it had been selected
+ ///                                       when the shortcut was pressed; works with text= and send=1
+ ///     meraline://new                    start a new chat and open the window
++///     meraline://offer?selection=…&app=…  (promo build only) open the window with text on offer for the
++///                                       selection button, as the shortcut leaves text selected in that app
+ ///     meraline://settings               open Settings
+ ///     meraline://settings?pane=…        open Settings on a pane: general, prompt, updates, about, or a
+ ///                                       provider such as claudeCode (see `SettingsPane(named:)`)
+ nonisolated enum AutomationRoute: Equatable, Sendable {
+     case ask(text: String?, selection: String? = nil, send: Bool)
+     case newChat
++    case offer(selection: String, app: String?)
+     case settings(pane: String?)
+ 
+     static let scheme = "meraline"
+@@ -33,6 +36,10 @@
+             self = .ask(text: text.isEmpty ? nil : text, selection: selection.isEmpty ? nil : selection, send: send)
+         case "new":
+             self = .newChat
++        case "offer":
++            guard let selection = value("selection")?.trimmed, !selection.isEmpty else { return nil }
++            let app = value("app")?.trimmed ?? ""
++            self = .offer(selection: selection, app: app.isEmpty ? nil : app)
+         case "settings":
+             let pane = value("pane")?.trimmed ?? ""
+             self = .settings(pane: pane.isEmpty ? nil : pane)
+diff -ru a/Meraline/Support/ScreenCapture.swift b/Meraline/Support/ScreenCapture.swift
+--- a/Meraline/Support/ScreenCapture.swift	2026-09-26 18:59:53
++++ b/Meraline/Support/ScreenCapture.swift	2026-09-26 19:00:16
+@@ -13,11 +13,23 @@
+         case noDisplay
+     }
+ 
+-    static var hasAccess: Bool { CGPreflightScreenCaptureAccess() }
++    static var hasAccess: Bool {
++        ProcessInfo.processInfo.environment["MERALINE_PROMO_SCREENSHOT"] != nil || CGPreflightScreenCaptureAccess()
++    }
+ 
++    /// Promo build only: a picture that stands in for the screen, so a recording's screenshot shows the film's
++    /// desktop rather than the Mac's own menu bar, Dock, and windows.
++    private static var promoScreenshot: NSImage? {
++        ProcessInfo.processInfo.environment["MERALINE_PROMO_SCREENSHOT"].flatMap { NSImage(contentsOfFile: $0) }
++    }
++
+     /// The screen as it looks without Meraline, at its full resolution. Attaching the picture makes it small
+     /// enough for a model (see `ImageAttachment`).
+     static func image(of screen: NSScreen) async throws -> NSImage {
++        if let promoScreenshot {
++            try await Task.sleep(for: .milliseconds(250))
++            return promoScreenshot
++        }
+         guard hasAccess else { throw Failure.noAccess }
+         let content: SCShareableContent
+         do {

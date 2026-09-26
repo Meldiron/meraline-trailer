@@ -1,0 +1,9 @@
+node_modules/
+out/
+public/clips/*.mp4
+public/clips/*.mov
+.DS_Store
+.build/
+tools/__pycache__/
+# Made from Apple Loops, whose license allows them in a soundtrack but not shared on their own: rebuild with tools/make-music.py
+public/music.m4a

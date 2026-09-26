@@ -1,0 +1,106 @@
+{
+  "ask": {
+    "duration": 9.428,
+    "panel": {
+      "x": 404,
+      "y": 250
+    },
+    "markers": {
+      "open": 0.435,
+      "send": 4.501,
+      "done": 7.522
+    }
+  },
+  "actions": {
+    "duration": 5.387,
+    "panel": {
+      "x": 404,
+      "y": 250
+    },
+    "markers": {
+      "menu": 1.243,
+      "closed": 4.424
+    }
+  },
+  "select": {
+    "duration": 11.787,
+    "panel": {
+      "x": 404,
+      "y": 250
+    },
+    "markers": {
+      "open": 0.754,
+      "click": 2.223,
+      "send": 8.256,
+      "done": 10.068
+    }
+  },
+  "recent": {
+    "duration": 8.787,
+    "panel": {
+      "x": 404,
+      "y": 340
+    },
+    "markers": {
+      "click": 1.143,
+      "pick": 5.687
+    }
+  },
+  "anonymous": {
+    "duration": 10.325,
+    "panel": {
+      "x": 404,
+      "y": 250
+    },
+    "markers": {
+      "toggle": 1.146,
+      "send": 5.115,
+      "done": 9.992
+    }
+  },
+  "games": {
+    "duration": 42.808,
+    "panel": {
+      "x": 404,
+      "y": 250
+    },
+    "markers": {
+      "controller": 1.04,
+      "game1": 3.523,
+      "moved1": 6.395,
+      "game2": 8.204,
+      "moved2": 13.715,
+      "game3": 15.525,
+      "moved3": 20.805,
+      "game4": 22.614,
+      "moved4": 40.396
+    }
+  },
+  "agent": {
+    "duration": 15.95,
+    "panel": {
+      "x": 404,
+      "y": 250
+    },
+    "markers": {
+      "mode": 1.054,
+      "send": 7.047,
+      "ask": 10.592,
+      "allow": 12.199,
+      "done": 14.309
+    }
+  },
+  "screen": {
+    "duration": 16.225,
+    "panel": {
+      "x": 404,
+      "y": 250
+    },
+    "markers": {
+      "open": 1.063,
+      "shot": 2.402,
+      "send": 7.87,
+      "done": 13.05
+    }
+  }
+}
