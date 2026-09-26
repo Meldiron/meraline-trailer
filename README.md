@@ -13,7 +13,11 @@ npm install                  # once
 npm run studio               # preview in the browser, scrub the timeline, see each scene on its own
 npm run render               # out/meraline-promo.mp4, 1920×1080, 60 fps
 npm run render:draft         # a quick half-size render to check the cut
+npm run render:final         # out/meraline-trailer-4k60.mp4, 3840×2160, 60 fps, the one for YouTube
+npm run share                # from it, a 1080p60 copy under 50 MB and a 1080p30 copy under 10 MB, for Discord
 ```
+
+The recordings are made at twice the screen's points, so the 4K render shows the app as sharp as it was.
 
 The recordings (`public/clips/`) and the soundtrack (`public/music.m4a`) aren't in the repository: make them
 with `npm run record` (see [Recording](#recording)) and `python3 tools/make-music.py` before the first render.
@@ -128,4 +132,5 @@ Needs Screen Recording and Accessibility access for the terminal it runs in, Xco
 | `src/config.ts` | size, frame rate, tempo, colours, fonts, the recorded region of the screen, where the panel is in the recordings |
 | `record/` | the recorder, the input driver, the backdrop, the app build |
 | `tools/render-icons.swift` | the provider icons for the montage, drawn like Meraline's Settings |
+| `tools/share-copies.sh` | the smaller copies for Discord, encoded in two passes to fit 50 MB and 10 MB |
 | `tools/make-music.py` | the soundtrack, arranged to the cut from GarageBand's royalty-free Apple Loops (Disco Funk, "Boogie Right") |

@@ -5,6 +5,8 @@
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "render": "remotion render src/index.ts Promo out/meraline-promo.mp4 --codec h264 --crf 16 --concurrency 4",
+    "render:final": "remotion render src/index.ts Promo out/meraline-trailer-4k60.mp4 --codec h264 --crf 16 --scale 2 --jpeg-quality 100 --color-space bt709 --audio-bitrate 320k --concurrency 4",
+    "share": "zsh tools/share-copies.sh",
     "render:draft": "remotion render src/index.ts Promo out/meraline-promo-draft.mp4 --codec h264 --crf 28 --scale 0.5",
     "still": "remotion still src/index.ts",
     "backdrop": "remotion still src/index.ts BackdropStill public/backdrop-night.png",
